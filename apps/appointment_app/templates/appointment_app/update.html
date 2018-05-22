@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Update Appointment</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <a href="/appointments">Dashboard</a> <a href="/logout">Logout</a>
+    {% if messages %}
+        {% for message in messages %}
+            <p style="color:red">{{ message }}</p>   
+        {% endfor %}
+    {% endif %} 
+    <form action="/update/{{appointment.id}}" method="POST">
+       {% csrf_token %}
+       <div class = "row">
+           <div class = "input-field col s7">
+               <h5>Task:</h5><input id="tasks" type="text" class="validate" name="edit_tasks" value="{{appointment.tasks}}">
+           </div>
+       </div>
+       <div class = "dropdown">
+           <h5>Status:</h5>
+           <select id="status" name="edit_status">
+               <option value="Pending">Pending</option>
+               <option value="Done">Done</option>
+               <option value="Missing">Missing</option>
+           </select>
+       </div>
+       <div class = "row">
+            <div class = "input-field col s7">
+                <h5>Date:</h5><input id="date" type="date" class="validate" name="edit_date" value="{{appointment.date}}">
+            </div>
+        </div>
+        <div class = "row">
+                <div class = "input-field col s7">
+                    <h5>Time:</h5><input id="time" type="time" class="validate" name="edit_time" value="{{appointment.time}}">
+                </div>
+        </div>
+        <input type="submit" name="update" value="Update">
+    </form>
+</body>
+</html>

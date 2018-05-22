@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>What's Up</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <h2>Hello, {{user.name}}!</h2>
+    <a href="/logout">Logout</a>
+    <div class = 'main_appointment'>
+        <fieldset class = 'main'>
+            <h3>Here are your appointments for today, {{time}}:</h3>
+            <table>
+                <thead>
+                    <th>Tasks</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </thead>
+                <tbody>
+                    {% for appointment in today_appointment %}
+                    <tr>
+                        <td>{{ appointment.tasks }}</td>
+                        <td>{{ appointment.time }}</td>
+                        <td>{{ appointment.status }}</td>
+                        {% if appointment.status != 'Done' %}
+                        <td>
+                            <form class="edit" action="/appointments/{{appointment.id}}" method="POST">
+                                {% csrf_token %}
+                                <input type="submit" name="edit" value="Edit">
+                            </form>
+                            <form class="delete" action="/delete/{{appointment.id}}" method="POST">
+                                {% csrf_token %}
+                                <input type="submit" name="delete" value="Delete">
+                            </form>
+                        </td>       
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>            
+        </fieldset>
+    </div>
+    <div class = 'other_appointment'>
+        <h3>Your other Appointments:</h3>
+        <table>
+            <thead>
+                <th>Tasks</th>
+                <th>Date</th>
+                <th>Time</th>
+            </thead>
+            <tbody>
+                {% for appointment in appointments %}
+                <tr>
+                    <td>{{appointment.tasks}}</td>
+                    <td>{{appointment.date}}</td>
+                    <td>{{appointment.time}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class = 'add_appointment'>
+        {% if messages %}
+            {% for message in messages %}
+                <p style="color:red">{{ message }}</p>   
+            {% endfor %}
+        {% endif %}
+        <h3>Add Appointment</h3>
+        <form action="/add" class="col s14" method="POST">
+            {% csrf_token %}
+            <div class = "row">
+                <div class = "input-field col s12">
+                    Date: <input id="date" type="date" name="date">
+                </div>
+            </div>
+            <div class = "row">
+                <div class = "input-field col s12">
+                    Time: <input id="time" type="time" name="time">
+                </div>
+            </div>
+            <div class = "row">
+                <div class = "input-field col s12">
+                    Tasks: <input id="tasks" type="text" name="tasks">
+                </div>
+            </div>
+            <input type="submit" name="add" value ="Add">
+        </form>
+    </div>
+</body>
+</html>
